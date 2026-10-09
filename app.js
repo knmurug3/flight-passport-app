@@ -211,18 +211,40 @@ function selectFlight(id) {
   dom.inboundText.textContent = activeFlight.inboundLeg;
 
   simProgress = 0.42; // Reset demo point
-  fetchLiveOpenSkyTelemetry(activeFlight.callsign);
+  fetchLiveFlightData(activeFlight.callsign);
   drawFlightMap();
 }
 
 // -------------------------------------------------------------
-// OpenSky Network ADS-B Telemetry Engine
+// Live Aviation Intelligence (FlightAware AeroAPI + OpenSky)
 // -------------------------------------------------------------
-async function fetchLiveOpenSkyTelemetry(callsign) {
+async function fetchLiveFlightData(callsign) {
+  // 1. Fetch live Gates, Status, Baggage, and Times from FlightAware AeroAPI
   try {
-    const res = await fetch(`/api/opensky?callsign=${callsign}`);
-    if (res.ok) {
-      const data = await res.json();
+    const aeroRes = await fetch(`/api/flight?ident=${callsign}`);
+    if (aeroRes.ok) {
+      const live = await aeroRes.json();
+      if (live.found) {
+        dom.heroStatus.textContent = live.status.includes('Arrived') ? '🏁 ARRIVED' : `🟢 ${live.status}`;
+        dom.heroStatus.className = `status-badge ${live.status.includes('Arrived') ? 'on-time' : 'en-route'}`;
+        dom.depGate.textContent = live.depGate;
+        dom.arrGate.textContent = live.arrGate;
+        dom.baggageCarousel.textContent = live.baggageClaim;
+        dom.depTimeSched.textContent = live.depTimeSched;
+        dom.arrTimeSched.textContent = live.arrTimeSched;
+        if (live.aircraft) dom.gaugeAircraft.textContent = live.aircraft;
+        if (live.tail) dom.gaugeTail.textContent = live.tail;
+      }
+    }
+  } catch (err) {
+    console.log('AeroAPI query fallback', err);
+  }
+
+  // 2. Fetch live In-Air Telemetry from OpenSky Network
+  try {
+    const skyRes = await fetch(`/api/opensky?callsign=${callsign}`);
+    if (skyRes.ok) {
+      const data = await skyRes.json();
       if (data.live) {
         liveTelemetry = data;
         updateGauges(data.altitudeFeet, data.speedMph, data.status);
@@ -230,10 +252,10 @@ async function fetchLiveOpenSkyTelemetry(callsign) {
       }
     }
   } catch (err) {
-    console.log('OpenSky proxy query fallback to simulated mode', err);
+    console.log('OpenSky query fallback to simulated mode', err);
   }
 
-  // Simulation fallback when plane is not broadcasting right this moment
+  // Realistic simulation fallback if not actively in air this exact second
   updateSimulatedTelemetry();
 }
 
