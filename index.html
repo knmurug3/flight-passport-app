@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Flighty & Passport • Live Flight Tracker</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/airplane-take-off.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header>
+    <div class="logo-area">
+      <span style="font-size: 1.4rem;">✈️</span>
+      <div>
+        <div class="app-title">Flighty & Passport</div>
+        <div class="app-subtitle">OpenSky ADS-B Radar</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button id="tab-radar" class="tab-btn active">✈️ Live Radar</button>
+      <button id="tab-passport" class="tab-btn passport-tab">🛂 My Passport</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ========================================== -->
+    <!-- TAB 1: FLIGHTY LIVE RADAR TRACKER          -->
+    <!-- ========================================== -->
+    <section id="view-radar" class="tab-content active">
+      <!-- Flight Selector Chips -->
+      <div id="flight-selector" class="flight-selector-bar">
+        <!-- Dynamically rendered flight chips -->
+      </div>
+
+      <!-- Hero Flight Card -->
+      <div class="hero-card">
+        <div class="hero-top">
+          <div class="airline-badge">
+            <span style="font-size: 1.2rem;">🏔️</span>
+            <div>
+              <div id="hero-airline" class="airline-name">Alaska Airlines</div>
+              <div id="hero-ident" class="flight-ident">AS 1513 • Oct 2, 2026</div>
+            </div>
+          </div>
+          <div id="hero-status" class="status-badge on-time">🟢 ON TIME</div>
+        </div>
+
+        <!-- Route Display -->
+        <div class="route-row">
+          <div class="airport-block">
+            <span id="origin-code" class="airport-code">SEA</span>
+            <span id="origin-city" class="airport-city">Seattle, WA</span>
+          </div>
+
+          <div class="route-plane-icon">✈️</div>
+
+          <div class="airport-block" style="text-align: right;">
+            <span id="dest-code" class="airport-code">SLC</span>
+            <span id="dest-city" class="airport-city">Salt Lake City, UT</span>
+          </div>
+        </div>
+
+        <!-- Signature Flighty Progress Timeline -->
+        <div class="flight-timeline">
+          <div class="progress-track">
+            <div id="progress-fill" class="progress-bar-fill">
+              <div id="timeline-plane" class="timeline-plane">✈</div>
+            </div>
+          </div>
+          <div class="timeline-times">
+            <div>
+              <div class="time-label">Departs</div>
+              <div id="dep-time-sched" class="time-val">6:31 PM</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="time-label">Arrives</div>
+              <div id="arr-time-sched" class="time-val">9:38 PM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gate, Terminal & Baggage Row -->
+        <div class="gate-bar">
+          <div class="gate-item">
+            <span class="gate-label">Dep Terminal</span>
+            <span id="dep-terminal" class="gate-value">Main</span>
+          </div>
+          <div class="gate-item">
+            <span class="gate-label">Dep Gate</span>
+            <span id="dep-gate" class="gate-value highlight">D7</span>
+          </div>
+          <div class="gate-item">
+            <span class="gate-label">Arr Gate</span>
+            <span id="arr-gate" class="gate-value highlight">B14</span>
+          </div>
+          <div class="gate-item">
+            <span class="gate-label">Baggage Claim</span>
+            <span id="baggage-carousel" class="gate-value highlight">Carousel 3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Telemetry / Cockpit Gauges Grid -->
+      <div class="telemetry-grid">
+        <div class="gauge-card">
+          <span class="gauge-title">Altitude</span>
+          <div class="gauge-val" id="gauge-alt">35,200</div>
+          <span class="gauge-unit">FEET (MSL)</span>
+        </div>
+        <div class="gauge-card">
+          <span class="gauge-title">Ground Speed</span>
+          <div class="gauge-val" id="gauge-speed">482</div>
+          <span class="gauge-unit">MILES PER HOUR</span>
+        </div>
+        <div class="gauge-card">
+          <span class="gauge-title">Aircraft</span>
+          <div class="gauge-val" id="gauge-aircraft" style="font-size: 1rem;">Boeing 737</div>
+          <span class="gauge-unit">SERIES 900</span>
+        </div>
+        <div class="gauge-card">
+          <span class="gauge-title">Tail Number</span>
+          <div class="gauge-val" id="gauge-tail" style="font-family: monospace; font-size: 1.15rem;">N409AS</div>
+          <span class="gauge-unit">REGISTRATION</span>
+        </div>
+      </div>
+
+      <!-- Inbound Aircraft Watcher -->
+      <div class="inbound-card">
+        <div class="inbound-icon-box">🔄</div>
+        <div class="inbound-content">
+          <div class="inbound-title">Where is My Plane Right Now?</div>
+          <div id="inbound-text" class="inbound-detail">Tracking incoming leg from previous hub...</div>
+        </div>
+      </div>
+
+      <!-- Great Circle Flight Radar Map -->
+      <div class="map-card">
+        <div class="map-header">
+          <span class="map-title">Great Circle Flight Radar</span>
+          <button id="sim-toggle-btn" class="flight-chip" style="padding: 4px 10px; font-size: 0.72rem;">⚡ Simulation ON</button>
+        </div>
+        <canvas id="flight-map"></canvas>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: FANCY DIGITAL PASSPORT & LOGBOOK     -->
+    <!-- ========================================== -->
+    <section id="view-passport" class="tab-content">
+      <div class="passport-container">
+
+        <!-- Leather Gold-Embossed Passport Cover -->
+        <div class="passport-cover">
+          <div class="passport-emblem">🦅</div>
+          <div class="passport-nation">Republic of Aviation</div>
+          <div class="passport-heading">Official Passport</div>
+          <div class="passport-holder-name">Holder: Karthick Narayanen</div>
+          <div class="passport-mrz">P&lt;USANARAYANEN&lt;&lt;KARTHICK&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;AV2026KN9</div>
+        </div>
+
+        <!-- Lifetime Aviation Statistics -->
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div id="stat-miles" class="stat-num">1,378</div>
+            <div class="stat-label">Miles Flown</div>
+            <div class="stat-sub">Lifetime Air Distance</div>
+          </div>
+          <div class="stat-box">
+            <div id="stat-earth" class="stat-num">0.06x</div>
+            <div class="stat-label">Earth Orbits</div>
+            <div class="stat-sub">Circumnavigation</div>
+          </div>
+          <div class="stat-box">
+            <div id="stat-flights" class="stat-num">2</div>
+            <div class="stat-label">Flights Logged</div>
+            <div class="stat-sub">Commercial Legs</div>
+          </div>
+          <div class="stat-box">
+            <div id="stat-airports" class="stat-num">2</div>
+            <div class="stat-label">Airports</div>
+            <div class="stat-sub">Visited Hubs</div>
+          </div>
+        </div>
+
+        <!-- Stamped Immigration Pages -->
+        <div class="stamp-book">
+          <div class="stamp-book-header">
+            <div class="stamp-book-title">🛂 Visited Airport Immigration Stamps</div>
+            <span style="font-size: 0.75rem; color: #8c7e6c; font-weight: 700;">OFFICIAL ENTRY RECORD</span>
+          </div>
+          <div id="stamp-grid" class="stamp-grid">
+            <!-- Dynamically generated authentic inked stamps -->
+          </div>
+        </div>
+
+        <!-- Flight History Logbook Section -->
+        <div class="history-section">
+          <div class="history-header">
+            <div class="history-title">✈️ Personal Flight Logbook</div>
+            <button id="open-add-modal-btn" class="add-flight-btn">+ Add Flight to Passport</button>
+          </div>
+          <div id="log-list" class="log-list">
+            <!-- Dynamically rendered flight cards -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Flight Modal -->
+  <div id="add-flight-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>✈️ Add Flight to Passport</h3>
+      <div class="form-group">
+        <label>Flight Number</label>
+        <input id="input-flight-num" class="form-input" placeholder="e.g. DL 1234 or AS 1513" />
+      </div>
+      <div class="form-group" style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+          <label>From (Airport Code)</label>
+          <input id="input-from" class="form-input" placeholder="e.g. SEA" maxlength="4" />
+        </div>
+        <div style="flex: 1;">
+          <label>To (Airport Code)</label>
+          <input id="input-to" class="form-input" placeholder="e.g. SLC" maxlength="4" />
+        </div>
+      </div>
+      <div class="form-group" style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+          <label>Date</label>
+          <input id="input-date" class="form-input" placeholder="e.g. Oct 15, 2026" />
+        </div>
+        <div style="flex: 1;">
+          <label>Seat</label>
+          <input id="input-seat" class="form-input" placeholder="e.g. 12A" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button id="close-add-modal-btn" class="btn btn-glass" style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer;">Cancel</button>
+        <button id="save-flight-btn" class="btn" style="flex: 1; padding: 10px; border-radius: 10px; background: var(--accent-blue); color: #fff; font-weight: 700; border: none; cursor: pointer;">Add to Passport</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

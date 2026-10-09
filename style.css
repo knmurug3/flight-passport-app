@@ -1,0 +1,857 @@
+:root {
+  --bg-primary: #0a0d14;
+  --bg-card: #121722;
+  --bg-card-hover: #182030;
+  --text-primary: #ffffff;
+  --text-secondary: #8d98aa;
+  --text-muted: #526077;
+  --accent-green: #10b981;
+  --accent-gold: #f59e0b;
+  --accent-blue: #3b82f6;
+  --accent-red: #ef4444;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(245, 158, 11, 0.35);
+  --passport-cover: #0a192f;
+  --stamp-red: #d32f2f;
+  --stamp-blue: #1976d2;
+  --stamp-green: #2e7d32;
+  --stamp-purple: #7b1fa2;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App Header & Navigation Tabs */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 13, 20, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-subtitle {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Navigation Tabs (Flighty vs Passport) */
+.nav-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px;
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background: var(--bg-card-hover);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.tab-btn.active.passport-tab {
+  color: var(--accent-gold);
+}
+
+/* Main Container */
+main {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px 16px 80px 16px;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Flight Selector Bar */
+.flight-selector-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+.flight-selector-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.flight-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.flight-chip.active {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: var(--accent-blue);
+  color: #fff;
+}
+
+.flight-chip .chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-green);
+}
+
+/* Hero Flight Card */
+.hero-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.airline-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.airline-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.flight-ident {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.on-time {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-green);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.en-route {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-blue);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.status-badge.delayed {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--accent-red);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Route Display */
+.route-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.airport-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.airport-code {
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: #fff;
+}
+
+.airport-city {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.route-plane-icon {
+  font-size: 1.8rem;
+  color: var(--accent-blue);
+  animation: planeFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes planeFloat {
+  from { transform: translateX(-4px); }
+  to { transform: translateX(4px); }
+}
+
+/* Flighty Signature Progress Timeline */
+.flight-timeline {
+  margin: 20px 0 28px 0;
+  position: relative;
+}
+
+.progress-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+  border-radius: 6px;
+  width: 45%;
+  position: relative;
+  transition: width 0.5s ease;
+}
+
+.timeline-plane {
+  position: absolute;
+  right: -12px;
+  top: -9px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  color: var(--bg-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+}
+
+.timeline-times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.time-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.time-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Gate, Terminal & Baggage Bar */
+.gate-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-color);
+}
+
+.gate-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.gate-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.gate-value {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gate-value.highlight {
+  color: var(--accent-gold);
+}
+
+/* Telemetry Grid (Cockpit Gauges) */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.gauge-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gauge-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.gauge-val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gauge-unit {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Map Card */
+.map-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.map-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#flight-map {
+  width: 100%;
+  height: 240px;
+  border-radius: 14px;
+  background: #0f141e;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Inbound Aircraft Watch ("Where is My Plane?") */
+.inbound-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.inbound-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.inbound-content {
+  flex: 1;
+}
+
+.inbound-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.inbound-detail {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ========================================================
+   FANCY DIGITAL PASSPORT STYLES
+   ======================================================== */
+
+.passport-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Leather Gold-Foil Passport Cover */
+.passport-cover {
+  background: linear-gradient(135deg, #091326 0%, #030814 100%);
+  border: 2px solid var(--accent-gold);
+  border-radius: 22px;
+  padding: 32px 28px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), inset 0 0 80px rgba(0, 0, 0, 0.6);
+  position: relative;
+  text-align: center;
+}
+
+.passport-emblem {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px auto;
+  border: 2px solid var(--accent-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--accent-gold);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+}
+
+.passport-nation {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.passport-heading {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.passport-holder-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  font-family: Georgia, serif;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.passport-mrz {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  opacity: 0.75;
+  letter-spacing: 2px;
+  border-top: 1px dashed var(--border-gold);
+  padding-top: 12px;
+}
+
+/* Lifetime Aviation Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.stat-sub {
+  font-size: 0.7rem;
+  color: var(--accent-gold);
+  margin-top: 2px;
+}
+
+/* Passport Stamp Book (The Stamped Pages) */
+.stamp-book {
+  background: #fdfbf7;
+  color: #1a1a1a;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  background-image: radial-gradient(#e5e0d3 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.stamp-book-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #ddd2be;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.stamp-book-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #635848;
+}
+
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  min-height: 180px;
+}
+
+/* Weathered Authentic Immigration Stamp */
+.visa-stamp {
+  border: 3px solid;
+  border-radius: 16px;
+  padding: 14px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-weight: 800;
+  text-transform: uppercase;
+  position: relative;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.visa-stamp:hover {
+  transform: scale(1.04) rotate(0deg) !important;
+}
+
+.visa-stamp.stamp-red {
+  color: var(--stamp-red);
+  border-color: var(--stamp-red);
+}
+
+.visa-stamp.stamp-blue {
+  color: var(--stamp-blue);
+  border-color: var(--stamp-blue);
+}
+
+.visa-stamp.stamp-green {
+  color: var(--stamp-green);
+  border-color: var(--stamp-green);
+}
+
+.visa-stamp.stamp-purple {
+  color: var(--stamp-purple);
+  border-color: var(--stamp-purple);
+}
+
+.stamp-airport {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.stamp-city {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stamp-status {
+  font-size: 0.72rem;
+  border-top: 1px dashed currentColor;
+  border-bottom: 1px dashed currentColor;
+  padding: 2px 8px;
+  margin: 4px 0;
+  letter-spacing: 1px;
+}
+
+.stamp-date {
+  font-size: 0.68rem;
+  margin-top: 2px;
+}
+
+/* Flight History Logbook */
+.history-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 22px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.history-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.add-flight-btn {
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.log-card {
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.log-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.log-badge {
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: monospace;
+}
+
+.log-route {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.log-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.log-distance {
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* Modal Form */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: #141a27;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 28px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.modal-content h3 {
+  margin-bottom: 16px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .gate-bar, .telemetry-grid, .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .airport-code {
+    font-size: 2.2rem;
+  }
+}
